@@ -1,15 +1,15 @@
 from llama_index import GPTSimpleVectorIndex
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
 index = GPTSimpleVectorIndex.load_from_disk('technical_index.json')
 
 @app.route('/query', methods=['POST'])
 def query():
-    data = request.json
-    question = data.get('question', '')
+    question = request.data.decode('utf-8')
     response = index.query(question)
-    return jsonify({"response": str(response)})
+    return str(response)
 
 if __name__ == '__main__':
     app.run(port=5000)
+
